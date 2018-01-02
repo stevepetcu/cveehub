@@ -1,0 +1,29 @@
+# For functional testing.
+version: '3.4'
+
+services:
+  cveehub_phpfpm:
+    build:
+      context: ./docker/phpfpm-dev
+    networks:
+      - cveehub_network
+    volumes:
+      - ./:/var/www/cveehub
+    working_dir: /var/www/cveehub
+    environment:
+      APPLICATION_ENV: functional_testing
+
+  cveehub_nginx:
+    image: nginx:stable
+    networks:
+      - cveehub_network
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/sites.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - cveehub_phpfpm
+
+networks:
+  cveehub_network:
+    driver: bridge

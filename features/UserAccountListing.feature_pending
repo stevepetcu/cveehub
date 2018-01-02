@@ -1,0 +1,4 @@
+Feature: User account listing
+  In order to see all the registered users
+  As a visitor to the site
+  I need to be able to filter and get a list of the registered users

@@ -1,0 +1,19 @@
+<phpunit bootstrap="test/bootstrap.php">
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src</directory>
+        </whitelist>
+    </filter>
+
+    <testsuites>
+        <testsuite name="integration">
+            <directory>test/Integration</directory>
+        </testsuite>
+        <testsuite name="unit">
+            <directory>test/Unit</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>test/Functional</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

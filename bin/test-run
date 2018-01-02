@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+# © Stefan Petcu <contact@stefanpetcu.com>
+#
+# For the full copyright and license information, please view
+# the LICENSE file that was distributed with this source code.
+
+# get the path of the coverage directory, relative to this script.
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../.coverage/"
+
+# run all the PHPUnit and PHPSpec tests, and merge the coverage.
+printf "Running PHPUnit test suites...\n\n"
+vendor/bin/phpunit --coverage-php $DIR/.cov/coverage_phpunit.cov
+
+printf "\nRunning PHPSpec test suites...\n\n"
+vendor/bin/phpspec run
+
+printf "\nMerging results in '<project_root>/.coverage'...\n\n"
+vendor/bin/phpcov merge $DIR/.cov --html $DIR
+
+printf "\nDone!\n\nOpen '<project_root>/.coverage/index.html' in a browser to see the results.\n\n"
+
+exit 0

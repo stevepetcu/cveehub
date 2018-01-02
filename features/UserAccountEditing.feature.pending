@@ -1,0 +1,57 @@
+Feature: User account editing
+  In order to keep my data up-to-date and customize my preferences
+  As a user
+  I need to be able to edit my user account data
+
+#  Scenario: Edit my user data, but not my URN
+#    Given the following form parameters are set:
+#      | name       | value         |
+#      | first_name | Stefan-Daniel |
+#      | last_name  | Petcu         |
+#    When I request "/users/stefan-petcu" using HTTP PATCH
+#    Then the response status line is "204 No Content"
+#    And the "Content-Location" response header is "/stefan-petcu"
+#
+#  Scenario: Edit my user data, but not my URN
+#    Given the following form parameters are set:
+#      | name       | value         |
+#      | first_name | Stefan-Daniel |
+#      | last_name  | Petcu         |
+#      | urn        | stef-petcu    |
+#    When I request "/users/stefan-petcu" using HTTP PATCH
+#    Then the response status line is "204 No Content"
+#    And the "Content-Location" response header is "/stef-petcu"
+#
+#  Scenario: Edit my user data, but not my URN
+#    Given the following form parameters are set:
+#      | name       | value         |
+#      | first_name | Stefan-Daniel |
+#      | last_name  | Petcu         |
+#      | urn        | foo-bar       |
+#    When I request "/users/stefan-petcu" using HTTP PATCH
+#    Then the response status line is "409 Conflict"
+#    And the response body matches:
+#      """
+#        {
+#          "The chosen URN is already taken."
+#        }
+#      """
+#
+#  Scenario: Send incomplete user account data
+#
+#  Scenario: Send incorrect user account data
+#
+#  Scenario: Send already existing user account data
+#
+#  Scenario: Send unmodified user account data
+#
+#  Scenario: Send too simple password
+#
+#  Scenario: Send data for an unverified user account
+#
+#  Scenario: Add an email
+#
+#  Scenario: Add a phone number
+#
+#  Scenario: Add an address
+

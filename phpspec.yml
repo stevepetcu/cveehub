@@ -1,0 +1,40 @@
+suites:
+  domain_entity_suite:
+    namespace: CVeeHub\Domain\Entity
+    psr4_prefix: CVeeHub
+  domain_model_suite:
+    namespace: CVeeHub\Domain\Model
+    psr4_prefix: CVeeHub
+  infrastructure_factory_bootstrap_suite:
+    namespace: CVeeHub\Infrastructure\Factory\Bootstrap
+    psr4_prefix: CVeeHub
+  infrastructure_factory_entity_suite:
+    namespace: CVeeHub\Infrastructure\Factory\Entity
+    psr4_prefix: CVeeHub
+  infrastructure_factory_model_suite:
+    namespace: CVeeHub\Infrastructure\Factory\Model
+    psr4_prefix: CVeeHub
+  infrastructure_generator_suite:
+    namespace: CVeeHub\Infrastructure\Generator
+    psr4_prefix: CVeeHub
+  presentation_content_type_factory_suite:
+    namespace: CVeeHub\Presentation\ContentType
+    psr4_prefix: CVeeHub
+  presentation_representation_builder_suite:
+    namespace: CVeeHub\Presentation\Representation\Builder
+    psr4_prefix: CVeeHub
+  presentation_request_suite:
+    namespace: CVeeHub\Presentation\Request
+    psr4_prefix: CVeeHub
+  presentation_presentation_testing_suite:
+    namespace: CVeeHub\Presentation\Testing
+    psr4_prefix: CVeeHub
+bootstrap: ./test/bootstrap.php
+formatter:
+  name: pretty
+extensions:
+  LeanPHP\PhpSpec\CodeCoverage\CodeCoverageExtension:
+    format:
+      - php
+    output:
+      php: ./.coverage/.cov/coverage_phpspec.cov

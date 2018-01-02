@@ -1,0 +1,51 @@
+{
+  "name": "stevepetcu/cveehub",
+  "description": "Unified platform for managing your CV.",
+  "keywords": ["cveehub", "cv", "resume"],
+  "type": "project",
+  "homepage": "https://www.cveehub.com",
+  "license": "GNU AGPLv3",
+  "authors": [
+    {
+      "name": "Stefan Petcu",
+      "email": "contact@stefanpetcu.com",
+      "homepage": "https://www.stefanpetcu.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "CVeeHub\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "CVeeHub\\Test\\": "test/",
+      "spec\\CVeeHub\\": "spec/"
+    }
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/stevepetcu/gump"
+    }
+  ],
+  "require": {
+    "php": "^7.1",
+    "doctrine/orm": "^2.5",
+    "monolog/monolog": "^1.23",
+    "php-di/php-di": "^5.4",
+    "slim/slim": "^3.1",
+    "symfony/event-dispatcher": "^3.2",
+    "php-di/slim-bridge": "^1.0",
+    "stevepetcu/GUMP": "dev-master"
+  },
+  "require-dev": {
+    "behat/behat": "^3.3",
+    "imbo/behat-api-extension": "^2.0",
+    "fzaninotto/faker": "^1.7",
+    "leanphp/phpspec-code-coverage": "^3.1",
+    "phpunit/phpcov": "^4.0.1",
+    "phpspec/phpspec": "^3.2",
+    "phpunit/phpunit": "^6.2"
+  }
+}

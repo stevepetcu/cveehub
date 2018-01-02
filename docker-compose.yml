@@ -1,0 +1,56 @@
+version: '3.4'
+
+services:
+  cveehub_phpfpm:
+    build:
+      context: ./docker/phpfpm-dev
+    networks:
+      - cveehub_network
+    volumes:
+      - ./:/var/www/cveehub
+    working_dir: /var/www/cveehub
+    environment:
+      APPLICATION_ENV: development
+
+  cveehub_nginx:
+    image: nginx:stable
+    networks:
+      - cveehub_network
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/sites.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - cveehub_phpfpm
+
+  cveehub_mysql:
+    image: mysql:8.0.1
+    networks:
+      - cveehub_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: cveehub
+
+  cveehub_phpmyadmin:
+    image: nazarpc/phpmyadmin
+    ports:
+      - "1236:80"
+    links:
+      - cveehub_mysql:mysql
+    networks:
+      - cveehub_network
+    depends_on:
+      - cveehub_mysql
+
+  cveehub_composer:
+    image: composer
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  cveehub_network:
+    driver: bridge

@@ -1,0 +1,55 @@
+# For evaluating performance with Blackfire.
+version: '3.4'
+
+services:
+  cveehub_phpfpm:
+    build:
+      context: ./docker/phpfpm
+    networks:
+      - cveehub_network
+    volumes:
+      - ./:/var/www/cveehub
+    working_dir: /var/www/cveehub
+    environment:
+      APPLICATION_ENV: production
+
+  cveehub_nginx:
+    image: nginx:stable
+    networks:
+      - cveehub_network
+    ports:
+      - "8080:80"
+    volumes:
+      - ./docker/nginx/sites.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - cveehub_phpfpm
+
+  cveehub_blackfire:
+    image: blackfire/blackfire
+    networks:
+     - cveehub_network
+    environment:
+      BLACKFIRE_CLIENT_ID: 5296220a-ea42-407e-9267-f69ec12a6dc7
+      BLACKFIRE_CLIENT_TOKEN: 374e150f5890e3d661dbbb3459a261ed88f7a7ef86d3ca8ce7b7e5e1b2a4abd9
+      BLACKFIRE_SERVER_ID: 67e291bb-b070-4641-9d49-1a4eb4e74d1e
+      BLACKFIRE_SERVER_TOKEN: d171489257827ca612bd38e929867d9ed077cec09d253fdb70aadaa689e4eb83
+    depends_on:
+      - cveehub_phpfpm
+
+  cveehub_mysql:
+    image: mysql:8.0.1
+    networks:
+      - cveehub_network
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: cveehub
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  cveehub_network:
+    driver: bridge

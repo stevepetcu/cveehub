@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+
+# © Stefan Petcu <contact@stefanpetcu.com>
+#
+# For the full copyright and license information, please view
+# the LICENSE file that was distributed with this source code.
+
+RED='\033[0;31m'
+NC='\033[0m'
+
+# process flag.
+while [ ! $# -eq 0 ]
+do
+    case "$1" in
+         -h | --help)
+            printf "Runs Behat tests and manages the needed environment setup. The script must be run on the localhost - and not inside a docker container.\n"
+            printf "\nUsage:\n"
+            printf "  behat-run [options]\n"
+            printf "  behat-run -h|--help\n"
+            printf "\nOptions:\n"
+            printf "  -h, --help             Print this usage information.\n"
+            printf "  -f, --file FILE        Specify the docker-compose file which contains the functional testing environment specification (default: docker-compose-ft.yml).\n"
+            printf "  --php-service SERVICE  Specify the name of the docker service which runs PHP for functional testing (default: *_phpfpm service defined in the compose file, assuming it's only one).\n"
+            exit 0
+            ;;
+         -f | --file)
+            FILE="$2"
+            shift
+            if [ -z "$FILE" ];
+              then
+                printf "${RED}ERROR${NC}: Please specify a file name.\n"
+                exit 1
+            fi
+            ;;
+         --php-service)
+            PHP_SERVICE="$2"
+            shift
+            if [ -z "$PHP_SERVICE" ];
+              then
+                printf "${RED}ERROR${NC}: Please specify a service name.\n"
+                exit 1
+            fi
+            ;;
+         *)
+            $(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/behat-run -h
+            ;;
+    esac
+    shift
+done
+
+# check if the docker-compose command is available.
+if ! type "docker-compose" > /dev/null; then
+  printf "${RED}ERROR${NC}: The 'docker-compose' command is unavailable on this environment. Are you trying to run this inside a docker container?\n\n"
+
+  exit 127
+fi
+
+# get the path of the docker-compose file for functional testing, relative to this script.
+if [ -z "$FILE" ];
+  then
+    FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../docker-compose-ft.yml"
+  else
+    FILE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../$FILE"
+fi
+
+# configure environment for functional testing.
+printf "\nSetting up testing environment...\n\n"
+docker-compose --file $FILE up -d --build
+
+# get the name of the php docker container.
+if [ -z "$PHP_SERVICE" ];
+  then
+    PHP_SERVICE=$(cat $FILE | grep _phpfpm | head -1)
+    PHP_SERVICE=${PHP_SERVICE%?}
+fi
+
+PHP_CONTAINER="$(docker inspect --format='{{.Name}}' $(docker ps -q) | grep $PHP_SERVICE"_1")"
+
+if [ -z "$PHP_CONTAINER" ];
+  then
+    printf "${RED}ERROR${NC}: Container corresponding to $PHP_SERVICE could not be found. Reverting to development environment...\n\n"
+    docker-compose up -d --build --remove-orphans
+    exit 1
+fi
+
+printf "\nRunning Behat test suites...\n\n"
+docker exec $PHP_CONTAINER vendor/bin/behat
+
+printf "\nReverting to development environment...\n\n"
+docker-compose up -d --build --remove-orphans
+
+printf "\nDone!\n\n"
+
+exit 0

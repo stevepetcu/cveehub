@@ -1,0 +1,19 @@
+default:
+  formatters:
+    pretty: true
+  suites:
+    user_account:
+      contexts:
+        - FunctionalBootstrapContext:
+            environment: functional_testing
+            constantsPath: bootstrap/constants.php
+            containerPath: bootstrap/container.php
+        - SqlDatabaseBootstrapContext:
+            environment: functional_testing
+            constantsPath: bootstrap/constants.php
+            containerPath: bootstrap/container.php
+        - UserAccountGettingContext
+  extensions:
+    Imbo\BehatApiExtension:
+        apiClient:
+            base_uri: http://cveehub_nginx
